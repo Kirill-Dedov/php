@@ -53,69 +53,48 @@ class ProductRepository{
 
     }
     
-    public function printList($products){
+    public function prepareList($products,$title){
+
+        $result = "{$title}\n";
         
         foreach($products as $product){
 
-             echo "• {$product->name} | код: {$product->code} | сортировка: {$product->sort}\n";
+             $result.= "• {$product->name} | код: {$product->code} | сортировка: {$product->sort}\n";
 
         }
+
+        return $result;
         
     }
+
+   
 
     public function displaySortedBySort(){
 
         $sorted = $this->products;
-        $count = count($sorted);
 
-        for($i = 0;$i < $count - 1; $i++){
+        usort($sorted,fn($a,$b) =>$a->sort - $b->sort);
 
-            for($j = 0;$j < $count - $i - 1;$j++){
+        return $this->prepareList($sorted,"Сортировка по sort:");
 
-                if($sorted[$j]->sort > $sorted[$j + 1]->sort){
-
-                    $temp = $sorted[$j];
-                    $sorted[$j] = $sorted[$j + 1];
-                    $sorted[$j + 1] = $temp;
-
-                }
-            }
-        }
-
-        echo "Сортировка по sort:\n";
-        $this->printList($sorted);
 
     }
+
+   
 
     public function displaySortedByName(){
 
         $sorted = $this->products;
-        $count = count($sorted);
 
-        for($i = 0; $i < $count - 1; $i++){
+        usort($sorted,fn($a,$b) => strcmp($a->name,$b->name));
 
-            for($j = 0; $j < $count - $i - 1;$j++){
-
-                if(strcmp($sorted[$j]->name,$sorted[$j + 1]->name)>0){
-
-                    $temp = $sorted[$j];
-                    $sorted[$j] = $sorted[$j + 1];
-                    $sorted[$j + 1] = $temp;
-
-                }
-
-            }
-            
-        }
-
-        echo "Сортировка по name:\n";
-        $this->printList($sorted);
+        return $this->prepareList($sorted,"Сортировка по name:");
 
     }
 
 }
 
 $repository = new ProductRepository($products);
-$repository->displaySortedByName();
+echo $repository->displaySortedByName();
 echo "\n";
-$repository->displaySortedBySort();
+echo $repository->displaySortedBySort();
