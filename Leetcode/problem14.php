@@ -1,5 +1,7 @@
 <?php
 
+// https:// leetcode.com/problems/longest-common-prefix/description/?envType=problem-list-v2&envId=array
+
 function longestCommonPrefix($strs)
 {
     $commonPrefix = '';
