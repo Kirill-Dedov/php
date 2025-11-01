@@ -2,28 +2,28 @@
 
 class Faculty
 {
-    private $name;
-    private $dean;
-    private $students;
+    private string $name;
+    private string $dean;
+    private array $students;
 
-    public function __construct($name, $dean, $students = [])
+    public function __construct(string $name, string $dean, array $students = [])
     {
         $this->setName($name);
         $this->setDean($dean);
         $this->setStudents($students);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getDean()
+    public function getDean(): string
     {
         return $this->dean;
     }
 
-    public function getStudents()
+    public function getStudents(): array
     {
         return [...$this->students];
     }
@@ -31,7 +31,7 @@ class Faculty
     /**
      * @throws InvalidArgumentException
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         if (empty($name)) {
             throw new InvalidArgumentException('Название факультета не может быть пустым');
@@ -42,7 +42,7 @@ class Faculty
     /**
      * @throws InvalidArgumentException
      */
-    public function setDean($dean)
+    public function setDean(string $dean): void
     {
         if (empty($dean)) {
             throw new InvalidArgumentException('Имя декана не может быть пустым');
@@ -53,7 +53,7 @@ class Faculty
     /**
      * @throws InvalidArgumentException
      */
-    public function setStudents($students)
+    public function setStudents(array $students): void
     {
         foreach ($students as $student) {
             if (!$student instanceof Student) {
@@ -66,16 +66,12 @@ class Faculty
     /**
      * @throws InvalidArgumentException
      */
-    public function addStudent($student)
+    public function addStudent(Student $student): void
     {
-        if (!$student instanceof Student) {
-            throw new InvalidArgumentException('Студент должен быть экземпляром класса Student');
-        }
-
         $this->students[] = $student;
     }
 
-    public function getStudentsCount()
+    public function getStudentsCount(): int
     {
         return count($this->students);
     }

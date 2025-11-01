@@ -4,7 +4,6 @@ require_once 'classes/Subject.php';
 require_once 'classes/Student.php';
 require_once 'classes/Faculty.php';
 require_once 'classes/University.php';
-
 try {
     $student1 = new Student('Иван Иванов', [
         new Subject('Математика', 5),
@@ -51,15 +50,30 @@ try {
 
     $university = new University('Технический университет', 'Профессор Браун', [$faculty1, $faculty2, $faculty3]);
 
-    $files = $university->saveAllReports();
-    echo "Отчеты успешно сохранены:\n";
-    echo '- Отчет по факультетам: '.$files['faculties']."\n";
-    echo '- Отчет по студентам: '.$files['students']."\n";
-    echo "\nОткройте эти файлы в браузере для просмотра.\n";
+    $success = true;
+    $FacultiesReportFileName = 'faculties_report.html';
+    $FacultiesReport = file_put_contents($FacultiesReportFileName, $university->getFacultiesReportHTML());
+    if (false === $FacultiesReport) {
+        echo "Не удалось сохранить файл: $FacultiesReportFileName\n";
+        $success = false;
+    }
+
+    $StudentsReportFileName = 'students_report.html';
+    $StudentsReport = file_put_contents($StudentsReportFileName, $university->getStudentsReportHTML());
+    if (false === $StudentsReport) {
+        echo "Не удалось сохранить файл: $StudentsReportFileName\n";
+
+        $success = false;
+    }
+
+    if ($success) {
+        echo "Отчеты успешно сохранены:\n";
+        echo '- Отчет по факультетам: '.$FacultiesReportFileName."\n";
+        echo '- Отчет по студентам: '.$StudentsReportFileName."\n";
+        echo "\nОткройте эти файлы в браузере для просмотра.\n";
+    }
 } catch (InvalidArgumentException $e) {
     echo 'Ошибка в данных: '.$e->getMessage()."\n";
-} catch (RuntimeException $e) {
-    echo 'Ошибка при сохранении файлов: '.$e->getMessage()."\n";
 } catch (Exception $e) {
     echo 'Произошла непредвиденная ошибка: '.$e->getMessage()."\n";
 }

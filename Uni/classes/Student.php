@@ -2,21 +2,21 @@
 
 class Student
 {
-    private $name;
-    private $subjects;
+    private string $name;
+    private array $subjects;
 
-    public function __construct($name, $subjects = [])
+    public function __construct(string $name, array $subjects = [])
     {
         $this->setName($name);
         $this->setSubjects($subjects);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getSubjects()
+    public function getSubjects(): array
     {
         return [...$this->subjects];
     }
@@ -24,7 +24,7 @@ class Student
     /**
      * @throws InvalidArgumentException
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         if (empty($name)) {
             throw new InvalidArgumentException('Имя студента не может быть пустым');
@@ -35,7 +35,7 @@ class Student
     /**
      * @throws InvalidArgumentException
      */
-    public function setSubjects($subjects)
+    public function setSubjects(array $subjects): void
     {
         foreach ($subjects as $subject) {
             if (!$subject instanceof Subject) {
@@ -49,12 +49,8 @@ class Student
      *
      * @throws InvalidArgumentException
      */
-    public function setSubject($subject)
+    public function setSubject(Subject $subject): void
     {
-        if (!$subject instanceof Subject) {
-            throw new InvalidArgumentException('Предмет должен быть экземпляром класса Subject');
-        }
-
         $foundIndex = null;
         foreach ($this->subjects as $index => $existingSubject) {
             if ($existingSubject->getName() === $subject->getName()) {
@@ -73,13 +69,13 @@ class Student
     /**
      * @throws InvalidArgumentException
      */
-    public function setNewSubject($name, $grade)
+    public function setNewSubject(string $name, int $grade): void
     {
         $subject = new Subject($name, $grade);
         $this->setSubject($subject);
     }
 
-    public function getAverageGrade()
+    public function getAverageGrade(): float
     {
         if (empty($this->subjects)) {
             return 0;

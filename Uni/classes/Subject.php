@@ -2,8 +2,8 @@
 
 class Subject
 {
-    private $name;
-    private $grade;
+    private string $name;
+    private int $grade;
 
     public function __construct($name, $grade)
     {
@@ -11,12 +11,12 @@ class Subject
         $this->setGrade($grade);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getGrade()
+    public function getGrade(): int
     {
         return $this->grade;
     }
@@ -24,7 +24,7 @@ class Subject
     /**
      * @throws InvalidArgumentException
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         if (empty($name)) {
             throw new InvalidArgumentException('Название предмета не может быть пустым');
@@ -38,7 +38,7 @@ class Subject
     /**
      * @throws InvalidArgumentException
      */
-    public function setGrade($grade)
+    public function setGrade(int $grade): void
     {
         if (1 > $grade || 5 < $grade) {
             throw new InvalidArgumentException('Оценка должна быть целым числом от 1 до 5');
