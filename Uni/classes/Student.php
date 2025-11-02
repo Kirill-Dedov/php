@@ -2,8 +2,8 @@
 
 class Student
 {
-    private string $name;
-    private array $subjects;
+    private string $name = '';
+    private array $subjects = [];
 
     public function __construct(string $name, array $subjects = [])
     {
@@ -18,7 +18,7 @@ class Student
 
     public function getSubjects(): array
     {
-        return [...$this->subjects];
+        return $this->subjects;
     }
 
     /**

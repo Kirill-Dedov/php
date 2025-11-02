@@ -49,27 +49,119 @@ try {
     $faculty3 = new Faculty('Факультет физики', 'Профессор Васильев', [$student2]);
 
     $university = new University('Технический университет', 'Профессор Браун', [$faculty1, $faculty2, $faculty3]);
-
     $success = true;
-    $FacultiesReportFileName = 'faculties_report.html';
-    $FacultiesReport = file_put_contents($FacultiesReportFileName, $university->getFacultiesReportHTML());
-    if (false === $FacultiesReport) {
-        echo "Не удалось сохранить файл: $FacultiesReportFileName\n";
+
+    $facultiesReportFileName = 'faculties_report.html';
+    $facultiesReportHtml = '<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Отчет по факультетам - '.$university->getName().'</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { color: #333; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            th, td { padding: 12px; text-align: left; border-bottom: 1px solid #b1b1b1ff; }
+            th { background-color: #e0dfdfff; }
+            .faculty-count { margin: 20px 0; }
+        </style>
+    </head>
+    <body>
+        <h1>Университет: '.$university->getName().'</h1>
+        <div class="faculty-count"><strong>Общее количество студентов:</strong> '.$university->getTotalStudentsCount().'</div>';
+
+    if (empty($university->getFaculties())) {
+        $facultiesReportHtml .= '<p>Пока в университете нет факультетов</p>';
+    } else {
+        $facultiesReportHtml .= '<table>
+                    <thead>
+                        <tr>
+                            <th>Название факультета</th>
+                            <th>Декан</th>
+                            <th>Количество студентов</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+        foreach ($university->getFaculties() as $faculty) {
+            $facultiesReportHtml .= '<tr>
+                        <td>'.$faculty->getName().'</td>
+                        <td>'.$faculty->getDean().'</td>
+                        <td>'.$faculty->getStudentsCount().'</td>
+                    </tr>';
+        }
+
+        $facultiesReportHtml .= '</tbody>
+                </table>';
+    }
+
+    $facultiesReportHtml .= '</body>
+    </html>';
+
+    $facultiesReportHtml = file_put_contents($facultiesReportFileName, $facultiesReportHtml);
+    if (false === $facultiesReportHtml) {
+        echo "Не удалось сохранить файл: $facultiesReportFileName\n";
         $success = false;
     }
 
-    $StudentsReportFileName = 'students_report.html';
-    $StudentsReport = file_put_contents($StudentsReportFileName, $university->getStudentsReportHTML());
-    if (false === $StudentsReport) {
-        echo "Не удалось сохранить файл: $StudentsReportFileName\n";
+    $allStudents = $university->getAllStudents();
+    $studentsReportFileName = 'students_report.html';
+    $studentsReportHtml = '<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Список студентов - '.$university->getName().'</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { color: #333; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            th, td { padding: 12px; text-align: left; border-bottom: 1px solid #b1b1b1ff; }
+            th { background-color: #e0dfdfff; }
+            .student-count { margin: 20px 0; }
+        </style>
+    </head>
+    <body>
+        <h1>Список всех студентов</h1>
+        <div class="student-count"><strong>Общее количество студентов:</strong> '.count($allStudents).'</div>';
+
+    if (empty($allStudents)) {
+        $studentsReportHtml .= '<p>Пока в университете нет ни одного студента</p>';
+    } else {
+        $studentsReportHtml .= '<table>
+                    <thead>
+                        <tr>
+                            <th>Имя студента</th>
+                            <th>Факультет</th>
+                            <th>Средний бал</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+        foreach ($allStudents as $student) {
+            $facultyName = $university->getFacultyForStudent($student)->getName();
+            $studentsReportHtml .= '<tr>
+                        <td>'.$student->getName().'</td>
+                        <td>'.$facultyName.'</td>
+                        <td>'.$student->getAverageGrade().'</td>
+                    </tr>';
+        }
+
+        $studentsReportHtml .= '</tbody>
+                </table>';
+    }
+
+    $studentsReportHtml .= '</body>
+    </html>';
+    $studentsReport = file_put_contents($studentsReportFileName, $studentsReportHtml);
+    if (false === $studentsReport) {
+        echo "Не удалось сохранить файл: $studentsReportFileName\n";
 
         $success = false;
     }
-
     if ($success) {
         echo "Отчеты успешно сохранены:\n";
-        echo '- Отчет по факультетам: '.$FacultiesReportFileName."\n";
-        echo '- Отчет по студентам: '.$StudentsReportFileName."\n";
+        echo '- Отчет по факультетам: '.$facultiesReportFileName."\n";
+        echo '- Отчет по студентам: '.$studentsReportFileName."\n";
         echo "\nОткройте эти файлы в браузере для просмотра.\n";
     }
 } catch (InvalidArgumentException $e) {

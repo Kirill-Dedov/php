@@ -2,8 +2,8 @@
 
 class Subject
 {
-    private string $name;
-    private int $grade;
+    private string $name = '';
+    private int $grade = 0;
 
     public function __construct($name, $grade)
     {

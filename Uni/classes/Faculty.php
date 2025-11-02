@@ -2,9 +2,9 @@
 
 class Faculty
 {
-    private string $name;
-    private string $dean;
-    private array $students;
+    private string $name = '';
+    private string $dean = '';
+    private array $students = [];
 
     public function __construct(string $name, string $dean, array $students = [])
     {
@@ -25,7 +25,7 @@ class Faculty
 
     public function getStudents(): array
     {
-        return [...$this->students];
+        return $this->students;
     }
 
     /**
